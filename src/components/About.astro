@@ -1,0 +1,231 @@
+---
+import { portfolioData } from '../data/portfolio';
+
+const { name, role, avatar, longBio, email, location } = portfolioData.personalInfo;
+---
+
+<section id="about" class="section">
+  <div class="container">
+    <div class="grid-layout">
+      <!-- Image side -->
+      <div class="image-side reveal">
+        <div class="image-wrapper glass">
+          <img src={avatar} alt={name} class="profile-img" loading="lazy" />
+          <!-- Floating badge -->
+          <div class="location-badge glass">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+            Based in {location}
+          </div>
+        </div>
+      </div>
+
+      <!-- Text side -->
+      <div class="text-side reveal reveal-delay-2">
+        <div class="badge">About Me</div>
+        <h2 class="section-title">Bridging creativity & code</h2>
+        <p class="long-bio">{longBio}</p>
+        
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">Name</span>
+            <span class="info-value">{name}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Role</span>
+            <span class="info-value">{role}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Email</span>
+            <span class="info-value"><a href={`mailto:${email}`} class="link-hover">{email}</a></span>
+          </div>
+        </div>
+
+        <div class="highlights-row">
+          <div class="highlight-card glass">
+            <span class="highlight-number">3+</span>
+            <span class="highlight-text">Years Coding</span>
+          </div>
+          <div class="highlight-card glass">
+            <span class="highlight-number">10+</span>
+            <span class="highlight-text">Completed Projects</span>
+          </div>
+          <div class="highlight-card glass">
+            <span class="highlight-number">100%</span>
+            <span class="highlight-text">Commitment</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .grid-layout {
+    display: grid;
+    grid-template-columns: 1fr 1.25fr;
+    gap: 4rem;
+    align-items: center;
+  }
+
+  @media (max-width: 900px) {
+    .grid-layout {
+      grid-template-columns: 1fr;
+      gap: 3rem;
+    }
+  }
+
+  /* Image styling */
+  .image-side {
+    display: flex;
+    justify-content: center;
+  }
+
+  .image-wrapper {
+    position: relative;
+    padding: 0.75rem;
+    border-radius: var(--radius-lg);
+    max-width: 380px;
+    width: 100%;
+    aspect-ratio: 1;
+    overflow: hidden;
+  }
+
+  .profile-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: var(--radius-md);
+    transition: transform var(--transition-slow);
+  }
+
+  .image-wrapper:hover .profile-img {
+    transform: scale(1.03);
+  }
+
+  .location-badge {
+    position: absolute;
+    bottom: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-full);
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    box-shadow: var(--shadow-md);
+    white-space: nowrap;
+  }
+
+  .location-badge svg {
+    color: var(--primary);
+  }
+
+  /* Text styling */
+  .text-side {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .long-bio {
+    font-size: 1.05rem;
+    color: var(--text-secondary);
+    line-height: 1.75;
+    margin-bottom: 2rem;
+  }
+
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+    border-top: 1px solid var(--border-color);
+    padding-top: 1.5rem;
+  }
+
+  .info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .info-label {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    font-weight: 600;
+  }
+
+  .info-value {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text-primary);
+  }
+
+  .link-hover {
+    color: var(--primary);
+    font-weight: 600;
+    position: relative;
+  }
+  
+  .link-hover::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background-color: var(--primary);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--transition-fast) ease;
+  }
+
+  .link-hover:hover::after {
+    transform: scaleX(1);
+  }
+
+  /* Highlight Cards */
+  .highlights-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+
+  .highlight-card {
+    padding: 1.25rem;
+    border-radius: var(--radius-md);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    transition: transform var(--transition-fast), border-color var(--transition-fast);
+  }
+
+  .highlight-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--primary);
+  }
+
+  .highlight-number {
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--primary);
+  }
+
+  .highlight-text {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+  }
+
+  @media (max-width: 480px) {
+    .highlights-row {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

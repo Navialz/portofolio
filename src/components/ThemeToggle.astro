@@ -1,0 +1,89 @@
+---
+---
+<button id="theme-toggle" aria-label="Toggle light and dark theme" class="theme-btn">
+  <!-- Sun Icon -->
+  <svg class="sun" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="4"></circle>
+    <path d="M12 2v2"></path>
+    <path d="M12 20v2"></path>
+    <path d="m4.93 4.93 1.41 1.41"></path>
+    <path d="m17.66 17.66 1.41 1.41"></path>
+    <path d="M2 12h2"></path>
+    <path d="M20 12h2"></path>
+    <path d="m6.34 17.66-1.41 1.41"></path>
+    <path d="m19.07 4.93-1.41 1.41"></path>
+  </svg>
+  <!-- Moon Icon -->
+  <svg class="moon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+  </svg>
+</button>
+
+<style>
+  .theme-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-md);
+    background-color: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    cursor: pointer;
+    overflow: hidden;
+    transition: all var(--transition-fast);
+  }
+
+  .theme-btn:hover {
+    color: var(--primary);
+    background-color: var(--border-color);
+    transform: scale(1.05);
+  }
+
+  .sun, .moon {
+    position: absolute;
+    transition: transform var(--transition-normal), opacity var(--transition-normal);
+  }
+
+  /* When Light Theme: Moon is hidden, Sun is visible */
+  :global([data-theme="light"]) .sun {
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
+  }
+  :global([data-theme="light"]) .moon {
+    opacity: 0;
+    transform: rotate(90deg) scale(0.6);
+  }
+
+  /* When Dark Theme: Sun is hidden, Moon is visible */
+  :global([data-theme="dark"]) .sun {
+    opacity: 0;
+    transform: rotate(-90deg) scale(0.6);
+  }
+  :global([data-theme="dark"]) .moon {
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
+  }
+</style>
+
+<script>
+  const handleToggle = () => {
+    const toggleBtn = document.getElementById('theme-toggle');
+    if (!toggleBtn) return;
+
+    toggleBtn.addEventListener('click', () => {
+      const currentTheme = document.documentElement.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      
+      document.documentElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+    });
+  };
+
+  // Run on page load
+  handleToggle();
+  // Run on transitions / swaps
+  document.addEventListener('astro:after-swap', handleToggle);
+</script>

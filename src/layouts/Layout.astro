@@ -1,23 +1,174 @@
-<!doctype html>
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
-	</head>
-	<body>
-		<slot />
-	</body>
-</html>
+---
+import '../styles/global.css';
 
-<style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
-</style>
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { 
+  title = "Sahal Fatih | Student & Developer Portfolio", 
+  description = "Portfolio of Sahal Fatih, a computer science student and developer focused on building high-performance, minimalist modern web applications." 
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/assets/avatar.jpg" />
+    <meta name="generator" content={Astro.generator} />
+    
+    <!-- Primary Meta Tags -->
+    <title>{title}</title>
+    <meta name="title" content={title} />
+    <meta name="description" content={description} />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content="/assets/avatar.jpg" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:title" content={title} />
+    <meta property="twitter:description" content={description} />
+    <meta property="twitter:image" content="/assets/avatar.jpg" />
+
+    <!-- Inline script to set theme instantly & prevent flashing -->
+    <script is:inline>
+      (function() {
+        const theme = localStorage.getItem('theme') || 
+          (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+      })();
+    </script>
+  </head>
+  <body>
+    <!-- Theme Background Mesh -->
+    <div class="mesh-bg"></div>
+
+    <slot />
+
+    <!-- Scroll Reveal JavaScript -->
+    <script>
+      const observerOptions = {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.15
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('active');
+            // Once revealed, we don't need to observe it anymore
+            observer.unobserve(entry.target);
+          }
+        });
+      }, observerOptions);
+
+      // Set up observer on load
+      document.addEventListener('DOMContentLoaded', () => {
+        const revealElements = document.querySelectorAll('.reveal');
+        revealElements.forEach(el => observer.observe(el));
+      });
+      
+      // Handle view transitions / SPA-like page updates if any
+      document.addEventListener('astro:after-swap', () => {
+        const revealElements = document.querySelectorAll('.reveal');
+        revealElements.forEach(el => observer.observe(el));
+      });
+    </script>
+
+    <!-- Back to Top Button -->
+    <button id="back-to-top" aria-label="Back to top">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 19V5"/>
+        <path d="m5 12 7-7 7 7"/>
+      </svg>
+    </button>
+
+    <script>
+      const setupBackToTop = () => {
+        const btn = document.getElementById('back-to-top');
+        if (!btn) return;
+
+        const onScroll = () => {
+          if (window.scrollY > 400) {
+            btn.classList.add('visible');
+          } else {
+            btn.classList.remove('visible');
+          }
+        };
+
+        btn.addEventListener('click', () => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        window.addEventListener('scroll', onScroll, { passive: true });
+        onScroll();
+      };
+
+      setupBackToTop();
+      document.addEventListener('astro:after-swap', setupBackToTop);
+    </script>
+
+    <style is:global>
+      /* Layout specific styles */
+      .mesh-bg {
+        position: fixed;
+        inset: 0;
+        z-index: -10;
+        pointer-events: none;
+        background-color: var(--bg-primary);
+        background-image: 
+          radial-gradient(at 0% 0%, var(--primary-light) 0px, transparent 50%),
+          radial-gradient(at 100% 100%, var(--primary-light) 0px, transparent 50%);
+        opacity: 0.4;
+        transition: background-color var(--transition-normal);
+      }
+
+      /* Back to Top Button */
+      #back-to-top {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        z-index: 90;
+        width: 44px;
+        height: 44px;
+        border-radius: var(--radius-md);
+        background-color: var(--primary);
+        color: #ffffff;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 16px rgba(59, 130, 246, 0.35);
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(12px);
+        transition: opacity 0.35s ease, visibility 0.35s ease, transform 0.35s ease, background-color var(--transition-fast), scale 0.15s ease;
+      }
+
+      #back-to-top.visible {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+
+      #back-to-top:hover {
+        background-color: var(--primary-dark);
+        scale: 1.08;
+      }
+
+      #back-to-top:active {
+        scale: 0.96;
+      }
+    </style>
+  </body>
+</html>
